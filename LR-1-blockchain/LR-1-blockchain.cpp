@@ -1,6 +1,5 @@
 ﻿//Демонстрация ошибки race condition.
-
-#include <iostream>
+/*#include <iostream>
 #include <thread>
 
 static long long counter = 0;
@@ -116,6 +115,31 @@ int main() {
         a.join();
         b.join();
 
+        std::cout << "Done\n";
+        return 0;
+    }
+    */
+// порядок захвата
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+    std::mutex m1, m2;
+
+    void safe_job(const char* name) {
+        std::lock(m1, m2);
+        std::lock_guard<std::mutex> g1(m1, std::adopt_lock);
+        std::lock_guard<std::mutex> g2(m2, std::adopt_lock);
+
+        std::cout << name << " finished\n";
+    }
+
+    int main() {
+        std::thread a(safe_job, "t1");
+        std::thread b(safe_job, "t2");
+
+        a.join();
+        b.join();
         std::cout << "Done\n";
         return 0;
     }

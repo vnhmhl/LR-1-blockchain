@@ -1,5 +1,5 @@
 ﻿//Демонстрация ошибки race condition.
-/*
+
 #include <iostream>
 #include <thread>
 
@@ -25,9 +25,9 @@ int main() {
     std::cout << "Actual:   " << counter << "\n";
     return 0;
 }
-*/
 
-/*
+
+
 //Исправление ошибки через mutex
 #include <iostream>
 #include <thread>
@@ -56,7 +56,7 @@ int main() {
     std::cout << "Actual:   " << counter << "\n";
     return 0;
 }
-*/
+
 
 
 //Исправление ошибки через atomic
@@ -84,3 +84,4 @@ int main() {
     std::cout << "Expected: " << (2 * N) << "\n";
     std::cout << "Actual:   " << counter.load() << "\n";
     return 0;
+    

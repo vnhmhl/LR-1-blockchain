@@ -27,7 +27,7 @@ int main() {
 }
 */
 
-
+/*
 //Исправление ошибки через mutex
 #include <iostream>
 #include <thread>
@@ -56,3 +56,31 @@ int main() {
     std::cout << "Actual:   " << counter << "\n";
     return 0;
 }
+*/
+
+
+//Исправление ошибки через mutex
+#include <iostream>
+#include <thread>
+#include <atomic>
+
+static std::atomic<long long> counter{ 0 };
+
+void inc(long long n) {
+    for (long long i = 0; i < n; ++i) {
+        counter.fetch_add(1, std::memory_order_relaxed);
+    }
+}
+
+int main() {
+    const long long N = 10'000'000;
+
+    std::thread t1(inc, N);
+    std::thread t2(inc, N);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "Expected: " << (2 * N) << "\n";
+    std::cout << "Actual:   " << counter.load() << "\n";
+    return 0;

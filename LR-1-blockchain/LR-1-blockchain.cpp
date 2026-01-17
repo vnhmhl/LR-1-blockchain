@@ -59,7 +59,7 @@ int main() {
 */
 
 
-//Исправление ошибки через mutex
+//Исправление ошибки через atomic
 #include <iostream>
 #include <thread>
 #include <atomic>

@@ -85,3 +85,37 @@ int main() {
     std::cout << "Actual:   " << counter.load() << "\n";
     return 0;
     
+
+    
+    //Демонстрация ошибки Deadlock.
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <chrono>
+
+    std::mutex m1, m2;
+
+    void t1() {
+        std::lock_guard<std::mutex> lock1(m1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50)); // усиливаем шанс дедлока
+        std::lock_guard<std::mutex> lock2(m2);
+        std::cout << "t1 finished\n";
+    }
+
+    void t2() {
+        std::lock_guard<std::mutex> lock1(m2);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::lock_guard<std::mutex> lock2(m1);
+        std::cout << "t2 finished\n";
+    }
+
+    int main() {
+        std::thread a(t1);
+        std::thread b(t2);
+
+        a.join();
+        b.join();
+
+        std::cout << "Done\n";
+        return 0;
+    }
